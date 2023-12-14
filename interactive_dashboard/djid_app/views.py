@@ -1,5 +1,5 @@
 #  i have created this file - GTA
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import DashboardData
 # import random
@@ -17,9 +17,47 @@ jsonFilePath = os.path.join(settings.SERVERDATA_ROOT, 'djid_app\jsondata.json')
 # Create your views here.
 
 def index(request):
-    # return HttpResponse(f'djid_app    | {jsonFilePath}')
-    return render(request,'djid_app/index.html')
+    allDashboardData = DashboardData.objects.all()
 
+    # Get all unique topics from the DashboardData model
+    unique_topics = DashboardData.objects.values_list('topic', flat=True).distinct()
+
+    # Convert QuerySet to a list for easier handling in the template
+    unique_topics_list = list(unique_topics)
+
+
+    params = {
+    # 'catproducts' : all_prods,
+    'selected_data' : allDashboardData,
+    'unique_topics_list' : unique_topics_list,
+            }
+
+
+    # return HttpResponse(f'djid_app    | {jsonFilePath}')
+    return render(request,'djid_app/index.html', params)
+
+def print_selected_topic(request):
+    if request.method == 'POST':
+        selected_topics = request.POST.getlist('selected_topics')
+        print(f"Selected Topics: {selected_topics}")
+
+        unique_topics = DashboardData.objects.values_list('topic', flat=True).distinct()
+        unique_topics_list = list(unique_topics)
+
+        
+        selected_data = DashboardData.objects.filter(topic=selected_topics[0])
+        
+        params = {
+        # 'catproducts' : all_prods,
+        'selected_data' : selected_data,
+        'unique_topics_list' : unique_topics_list,
+                }
+        return render(request, 'djid_app/index.html', params)
+    
+    return redirect("index")
+
+    # return HttpResponse("Selected topics printed in the terminal.")
+    # return render(request,'djid_app/index.html', params)
 
 
 
