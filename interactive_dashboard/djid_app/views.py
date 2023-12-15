@@ -1,17 +1,17 @@
 #  i have created this file - GTA
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+# from django.http import HttpResponse
 from .models import DashboardData
 # import random
 
 
 # import json
-from django.core.exceptions import ValidationError
+# from django.core.exceptions import ValidationError
 from datetime import datetime
 
-import os
-from django.conf import settings
-jsonFilePath = os.path.join(settings.SERVERDATA_ROOT, 'djid_app\jsondata.json')
+# import os
+# from django.conf import settings
+# jsonFilePath = os.path.join(settings.SERVERDATA_ROOT, 'djid_app\jsondata.json')
 
 
 # Create your views here.
