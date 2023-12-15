@@ -5,9 +5,13 @@
 pip install Django
 
 
-```git clone https://github.com/HandMadeProjects/Django-Interactive-Dashboard.git
+```
 
-cd interactive_dashboard```
+git clone https://github.com/HandMadeProjects/Django-Interactive-Dashboard.git
+
+cd interactive_dashboard
+
+```
 
 
 ### Start Development Server:
