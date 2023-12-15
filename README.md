@@ -2,7 +2,7 @@
 
 # Install
 
-pip install Django
+```pip install Django```
 
 
 ```
@@ -15,11 +15,11 @@ cd interactive_dashboard
 
 
 ### Start Development Server:
-`python manage.py runserver`
+```python manage.py runserver```
 
 
 
-### Create Django Admin User:
+### View Django Admin User:
 Route : /admin
 
 
