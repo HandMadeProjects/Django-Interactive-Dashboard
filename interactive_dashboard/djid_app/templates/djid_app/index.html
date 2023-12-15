@@ -13,8 +13,21 @@
     <!-- Chart.js  -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"
+      charset="utf-8"
+    ></script>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css"
+    />
+
     <!-- FontAwesome - Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tw-elements/dist/css/tw-elements.min.css" />
     
     <style>
       /* Custom scrollbar styles */
@@ -43,7 +56,7 @@
 
 </head>
 <body class="bg-white">
-    <div class="text-center text-4xl font-bold py-10 text-blue-700">Interactive Dashboard
+    <div class="text-center text-4xl font-bold py-2 text-blue-700">Interactive Dashboard
       <span class="loading loading-ball loading-xs"></span>
       <span class="loading loading-ball loading-sm"></span>
       <span class="loading loading-ball loading-md"></span>
@@ -77,46 +90,383 @@
 
       
 
-      <div class="col-span-3 grid grid-cols-3 gap-2">
+      <div class="col-span-3 ">
         
-        
-        {% for items in selected_data %}
-        <!-- cards -->
-        <div class="border p-4 rounded-xl border-2 shadow-xl mx-10 mb-8 text-gray-500 ">
+        <!-- Dashboard -->
+        <div class="h-screen">
           
-          <div class="grid grid-cols-3 mb-4">
-            <div class="text-2xl col-span-2	ml-4"><b>Topics :</b> {{ items.topic|title }}</div>
-            <div class="text-lg text-center"><b>Year :</b> {{ items.end_year }} <i class="fa-solid fa-calendar-days text-gray-600 text-2xl mx-4"></i></div>
+          <!-- section 1 -->
+          <div class="grid grid-cols-2 gap-2">
+            <div class="border p-10 bg-purple-200 rounded-md shadow-xl">
+              <div class="mt-4 text-purple-600 text-3xl font-bold mb-10"><i class="fa-solid fa-bullseye mr-4"></i>Topics : {{ selected_data.0.topic|title }}</div>
+              <div class="mt-4 text-purple-500 text-xl font-bold"><i class="fa-solid fa-database mr-4"></i>Total Records : {{ selected_data|length }}</div>
+              <div class="mt-4 text-purple-500 text-xl font-bold"><i class="fa-brands fa-sourcetree mr-4"></i>Total Sources : {{ sources|length }}</div>
+            </div>
+            <div class="border p-4 rounded-md shadow-xl mr-10">
+              <canvas id="line-chart"></canvas>
+            </div>
           </div>
           
-          <div class="grid grid-cols-2 text-center py-2 h-20">
-            <div><b>Country :</b>  <i class="fa-solid fa-earth-americas text-blue-600 text-xl"></i>     <br>{{ items.country }}</div>
-            <div><b>Region :</b>  <i class="fa-solid fa-location-dot text-red-500 text-xl"></i>         <br>{{ items.region }} </div>
-          </div>
-          
-          <div class="grid grid-cols-3 gap-4 text-center mt-10">
-            <div class="p-2 border rounded hover:shadow-xl"><b>Internsity : <br>{{ items.intensity }}</b> 
-              <progress class="mt-10 progress progress-primary w-full" value="{{ items.intensity }}" max="100"></progress>
-            </div>
-            <div class="p-2 border rounded hover:shadow-xl"><b>Likelihood : <br>{{ items.likelihood }}</b> 
-              <progress class="mt-10 progress progress-secondary w-full" value="{{ items.likelihood }}" max="100"></progress>
-            </div>
-            <div class="p-2 border rounded hover:shadow-xl"><b>Relevance</b> 
-              <!-- <progress class="progress progress-success w-full" value="83" max="100"></progress> -->
-              <div class="radial-progress text-success mt-2" style="--value:{{ items.relevance }}; --thickness: 6px;" role="progressbar">
-                {{ items.relevance }}%
+          <!-- section 2 -->
+          <div class="grid grid-cols-3 gap-4 mt-4 text-gray-500 mr-10">
+            
+            <div class="px-5 py-5 border rounded-md shadow-sm">
+              <div class="text-2xl text-center font-bold text-purple-600">
+                Most Intensity
+                <a class="ml-10" href="{{ intensity_data.url}}" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+              </div>
+              
+              
+              <div class="grid grid-cols-2 text-center mt-4">
+                <div>Topic : {{ intensity_data.topic|title}}</div>
+                <div>End Year : {{ intensity_data.end_year}}</div>
+              </div>
+              
+              <div class="text-sm p-1 border bg-gray-100 rounded-md my-4"><b>Title : </b>{{ intensity_data.title}}</div>
+              
+              <div><i class="fa-solid fa-earth-americas mr-2"></i>Country : {{ intensity_data.country}}</div>
+              <div><i class="fa-solid fa-location-dot mr-3"></i>Region : {{ intensity_data.region}}</div>
+              <div>Pestle : {{ intensity_data.pestle}}</div>
+              <div>Source : {{ intensity_data.source}}</div>
+
+              <div class="grid grid-cols-3 gap-4 text-center mt-4">
+                <div class="text-sm p-2 border rounded hover:shadow-xl"><b>Internsity<br>{{ intensity_data.intensity }} %</b> 
+                  <progress class="mt-4 progress progress-primary w-full" value="{{ intensity_data.intensity }}" max="100"></progress>
+                </div>
+                <div class="text-sm p-2 border rounded hover:shadow-xl"><b>Likelihood<br>{{ intensity_data.likelihood }} %</b> 
+                  <progress class="mt-4 progress progress-secondary w-full" value="{{ intensity_data.likelihood }}" max="100"></progress>
+                </div>
+                <div class="text-sm p-2 border rounded hover:shadow-xl"><b>Relevance<br>{{ intensity_data.relevance }} %</b> 
+                  <progress class="mt-4 progress progress-success w-full" value="{{ intensity_data.relevance }}" max="100"></progress>
+                </div>
               </div>
             </div>
-          </div>
 
+            <div class="px-5 py-5 border rounded-md shadow-sm">
+              <div class="text-2xl text-center font-bold text-purple-600">
+                Most Relevance
+                <a class="ml-10" href="{{ relevant_data.url}}" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+              </div>
+              
+              
+              <div class="grid grid-cols-2 text-center mt-4">
+                <div>Topic : {{ relevant_data.topic|title}}</div>
+                <div>End Year : {{ relevant_data.end_year}}</div>
+              </div>
+              
+              <div class="text-sm p-1 border bg-gray-100 rounded-md my-4"><b>Title : </b>{{ relevant_data.title}}</div>
+              
+              <div><i class="fa-solid fa-earth-americas mr-2"></i>Country : {{ relevant_data.country}}</div>
+              <div><i class="fa-solid fa-location-dot mr-3"></i>Region : {{ relevant_data.region}}</div>              
+              <div>Pestle : {{ relevant_data.pestle}}</div>
+              <div>Source : {{ relevant_data.source}}</div>
+
+              <div class="grid grid-cols-3 gap-4 text-center mt-4">
+                <div class="text-xm p-2 border rounded hover:shadow-xl"><b>Internsity<br>{{ relevant_data.intensity }} %</b> 
+                  <progress class="mt-4 progress progress-primary w-full" value="{{ relevant_data.intensity }}" max="100"></progress>
+                </div>
+                <div class="text-xm p-2 border rounded hover:shadow-xl"><b>Likelihood<br>{{ relevant_data.likelihood }} %</b> 
+                  <progress class="mt-4 progress progress-secondary w-full" value="{{ relevant_data.likelihood }}" max="100"></progress>
+                </div>
+                <div class="text-xm p-2 border rounded hover:shadow-xl"><b>Relevance<br>{{ relevant_data.relevance }} %</b> 
+                  <progress class="mt-4 progress progress-success w-full" value="{{ relevant_data.relevance }}" max="100"></progress>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="px-5 py-5 border rounded-md shadow-sm">
+              <div class="text-2xl text-center font-bold text-purple-600">
+                Most Likelihood
+                <a class="ml-10" href="{{ likelihood_data.url}}" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+              </div>
+              
+              
+              <div class="grid grid-cols-2 text-center mt-4">
+                <div>Topic : {{ likelihood_data.topic|title}}</div>
+                <div>End Year : {{ likelihood_data.end_year}}</div>
+              </div>
+              
+              <div class="text-sm p-1 border bg-gray-100 rounded-md my-4"><b>Title : </b>{{ likelihood_data.title}}</div>
+              
+              <div><i class="fa-solid fa-earth-americas mr-2"></i>Country : {{ likelihood_data.country}}</div>
+              <div><i class="fa-solid fa-location-dot mr-3"></i>Region : {{ likelihood_data.region}}</div>              
+              <div>Pestle : {{ likelihood_data.pestle}}</div>
+              <div>Source : {{ likelihood_data.source}}</div>
+
+              <div class="grid grid-cols-3 gap-4 text-center mt-4">
+                <div class="text-sm p-2 border rounded hover:shadow-xl"><b>Internsity<br>{{ likelihood_data.intensity }} %</b> 
+                  <progress class="mt-4 progress progress-primary w-full" value="{{ likelihood_data.intensity }}" max="100"></progress>
+                </div>
+                <div class="text-sm p-2 border rounded hover:shadow-xl"><b>Likelihood<br>{{ likelihood_data.likelihood }} %</b> 
+                  <progress class="mt-4 progress progress-secondary w-full" value="{{ likelihood_data.likelihood }}" max="100"></progress>
+                </div>
+                <div class="text-sm p-2 border rounded hover:shadow-xl"><b>Relevance<br>{{ likelihood_data.relevance }} %</b> 
+                  <progress class="mt-4 progress progress-success w-full" value="{{ likelihood_data.relevance }}" max="100"></progress>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
 
         </div>
 
-        {% endfor %}
+
+
+        <script type="text/javascript">
+          (function () {
+              /* Chart initialisations */
+              /* Line Chart */
+              var labels = [{% for entry in selected_data %}".", {% endfor %}];
+              var datasets = [
+                  {
+                      label: "Intensity",
+                      backgroundColor: "#4c51bf",
+                      borderColor: "#4c51bf",
+                      data: [{% for entry in selected_data %}{{ entry.intensity }}, {% endfor %}],
+                      fill: false,
+                  },
+                  {
+                      label: "Likelihood",
+                      fill: false,
+                      backgroundColor: "#ed64a6",
+                      borderColor: "#ed64a6",
+                      data: [{% for entry in selected_data %}{{ entry.likelihood }}, {% endfor %}],
+                  },
+                  {
+                      label: "Relevance",
+                      fill: false,
+                      backgroundColor: "#10FF00",
+                      borderColor: "#10FF00",
+                      data: [{% for entry in selected_data %}{{ entry.relevance }}, {% endfor %}],
+                  },
+                  // Add more datasets as needed
+              ];
+      
+              var config = {
+                  type: "line",
+                  data: {
+                      labels: labels,
+                      datasets: datasets,
+                  },
+                  options: {
+                        maintainAspectRatio: false,
+                        responsive: true,
+                        title: {
+                          display: false,
+                          text: "Sales Charts",
+                          fontColor: "white",
+                        },
+                        legend: {
+                          labels: {
+                            fontColor: "purple",
+                          },
+                          align: "end",
+                          position: "bottom",
+                        },
+                        tooltips: {
+                          mode: "index",
+                          intersect: false,
+                        },
+                        hover: {
+                          mode: "nearest",
+                          intersect: true,
+                        },
+                        scales: {
+                          xAxes: [
+                            {
+                              ticks: {
+                                fontColor: "rgba(255,255,255,.7)",
+                              },
+                              display: true,
+                              scaleLabel: {
+                                display: false,
+                                labelString: "Month",
+                                fontColor: "white",
+                              },
+                              gridLines: {
+                                display: false,
+                                borderDash: [2],
+                                borderDashOffset: [2],
+                                color: "rgba(33, 37, 41, 0.3)",
+                                zeroLineColor: "rgba(0, 0, 0, 0)",
+                                zeroLineBorderDash: [2],
+                                zeroLineBorderDashOffset: [2],
+                              },
+                            },
+                          ],
+                          yAxes: [
+                            {
+                              ticks: {
+                                fontColor: "rgba(128, 0, 128,.7)",
+                              },
+                              display: true,
+                              scaleLabel: {
+                                display: false,
+                                labelString: "Value",
+                                fontColor: "black",
+                              },
+                              gridLines: {
+                                borderDash: [3],
+                                borderDashOffset: [3],
+                                drawBorder: false,
+                                color: "rgba(255, 255, 255, 0.15)",
+                                zeroLineColor: "rgba(33, 37, 41, 0)",
+                                zeroLineBorderDash: [2],
+                                zeroLineBorderDashOffset: [2],
+                              },
+                            },
+                          ],
+                        },
+                  },
+                };
+      
+              var ctx = document.getElementById("line-chart").getContext("2d");
+              window.myLine = new Chart(ctx, config);
+          })();
+      </script>
+
+
+      <div role="tablist" class="tabs tabs-lifted">
+        <a role="tab" class="tab tab-active" onclick="showSection('tableSection', this)">Table</a>
+        <a role="tab" class="tab" onclick="showSection('cardSection', this)">Card</a>
+    </div>
+      
+      <section id="tableSection">
+        <!-- <div class="text-center font-bold text-xl">Table</div> -->
+
+        <div class="flex flex-col">
+          <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+              <div class="overflow-hidden">
+                <table class="min-w-full text-left text-gray-500 text-sm font-light">
+                  <thead class="border-b font-medium">
+                    <tr>
+                      <th scope="col" class="px-6 py-4">#</th>
+                      <th scope="col" class="px-6 py-4">Topic</th>
+                      <th scope="col" class="px-6 py-4">Title</th>
+                      <th scope="col" class="px-6 py-4">Insight</th>
+                      <th scope="col" class="px-6 py-4">Sector</th>
+                      <th scope="col" class="px-6 py-4">Impact</th>
+                      <th scope="col" class="px-6 py-4">Pestle</th>
+                      <th scope="col" class="px-6 py-4">Source</th>
+                      <th scope="col" class="px-6 py-4">Intensity</th>
+                      <th scope="col" class="px-6 py-4">Relevance</th>
+                      <th scope="col" class="px-6 py-4">Likelihood</th>
+                      <th scope="col" class="px-6 py-4">URL</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for items in selected_data %}
+
+                        <tr
+                          class="border-b transition duration-300 ease-in-out hover:bg-neutral-100 border-neutral-500 hover:bg-neutral-200">
+                          <td class="whitespace-nowrap px-6 py-4 font-medium">{{ forloop.counter }}</td>
+                          <td class="whitespace-nowrap px-6 py-4">{{ items.topic }}</td>
+                          <td class="whitespace-nowrap px-6 py-4">{{ items.title }}</td>
+                          <td class="whitespace-nowrap px-6 py-4">{{ items.insight }}</td>
+                          <td class="whitespace-nowrap px-6 py-4">{{ items.sector }}</td>
+                          <td class="whitespace-nowrap px-6 py-4">{{ items.impact }}</td>
+                          <td class="whitespace-nowrap px-6 py-4">{{ items.pestle }}</td>
+                          <td class="whitespace-nowrap px-6 py-4">{{ items.source }}</td>
+                          <td class="whitespace-nowrap px-6 py-4">{{ items.intensity }}</td>
+                          <td class="whitespace-nowrap px-6 py-4">{{ items.relevance }}</td>
+                          <td class="whitespace-nowrap px-6 py-4">{{ items.likelihood }}</td>
+                          <td class="whitespace-nowrap px-6 py-4"><a href="{{ items.url }}" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-arrow-up-right-from-square"></i></a></td>
+                        </tr>
+                    
+                    {% endfor %}
+                    
+                    <!-- <tr
+                      class="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600">
+                      <td class="whitespace-nowrap px-6 py-4 font-medium">2</td>
+                      <td class="whitespace-nowrap px-6 py-4">Jacob</td>
+                      <td class="whitespace-nowrap px-6 py-4">Thornton</td>
+                      <td class="whitespace-nowrap px-6 py-4">@fat</td>
+                    </tr>
+                    <tr
+                      class="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600">
+                      <td class="whitespace-nowrap px-6 py-4 font-medium">3</td>
+                      <td class="whitespace-nowrap px-6 py-4">Larry</td>
+                      <td class="whitespace-nowrap px-6 py-4">Wild</td>
+                      <td class="whitespace-nowrap px-6 py-4">@twitter</td>
+                    </tr> -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="cardSection" class="hidden">
+        <!-- <div class="text-center font-bold text-xl">Card</div> -->
+        <div class="grid grid-cols-3 gap-10 mr-10 mt-10">
+          
+          {% for items in selected_data %}
+          <!-- cards -->
+          <div class="border p-4 rounded-xl border-2 shadow-xl mb-8 text-gray-500 ">
+            
+            <div class="grid grid-cols-3 mb-2">
+              <div class="text-xl col-span-2	ml-4"><b>Topics :</b> {{ items.topic|title }}</div>
+              <div class="text-md text-center"><i class="fa-solid fa-calendar-days text-gray-600 text-2xl mx-4"></i>{{ items.end_year }}</div>
+            </div>
+            
+            <div class="grid grid-cols-2 text-center py-2 h-12">
+              <div><b>Country :</b>  <i class="fa-solid fa-earth-americas text-blue-600 text-md"></i>     <br>{{ items.country }}</div>
+              <div><b>Region :</b>   <i class="fa-solid fa-location-dot text-red-500 text-md"></i>        <br>{{ items.region }} </div>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-4 text-center mt-3">
+              <div class="text-sm p-2 border rounded hover:shadow-xl"><b>Internsity<br>{{ items.intensity }}</b> 
+                <progress class="mt-4 progress progress-primary w-full" value="{{ items.intensity }}" max="100"></progress>
+              </div>
+              <div class="text-sm p-2 border rounded hover:shadow-xl"><b>Likelihood<br>{{ items.likelihood }}</b> 
+                <progress class="mt-4 progress progress-secondary w-full" value="{{ items.likelihood }}" max="100"></progress>
+              </div>
+              <div class="text-sm p-2 border rounded hover:shadow-xl"><b>Relevance<br>{{ items.relevance }}</b> 
+                <progress class="mt-4 progress progress-success w-full" value="{{ items.relevance }}" max="100"></progress>
+                <!-- <div class="radial-progress text-success mt-2" style="--value:{{ items.relevance }}; --thickness: 6px;" role="progressbar">
+                  {{ items.relevance }}%
+                </div> -->
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+
+      </div>
+      
+
+      </section>
+
+      <script>
+        function showSection(sectionId, tab) {
+            var sections = document.querySelectorAll('section');
+            for (var i = 0; i < sections.length; i++) {
+                sections[i].classList.add('hidden');
+            }
+    
+            var selectedSection = document.getElementById(sectionId);
+            selectedSection.classList.remove('hidden');
+    
+            // Remove 'tab-active' class from all tabs
+            var tabs = document.querySelectorAll('.tab');
+            for (var j = 0; j < tabs.length; j++) {
+                tabs[j].classList.remove('tab-active');
+            }
+    
+            // Add 'tab-active' class to the clicked tab
+            tab.classList.add('tab-active');
+        }
+    </script>
+
+
+
+
       </div>
       
     
-    </div>
+    <!-- </div> -->
 
 
 

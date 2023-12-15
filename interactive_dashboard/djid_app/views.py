@@ -39,18 +39,32 @@ def index(request):
 def print_selected_topic(request):
     if request.method == 'POST':
         selected_topics = request.POST.getlist('selected_topics')
+        my_topic = selected_topics[0]
         print(f"Selected Topics: {selected_topics}")
 
         unique_topics = DashboardData.objects.values_list('topic', flat=True).distinct()
         unique_topics_list = list(unique_topics)
 
+        sources = DashboardData.objects.filter(topic=my_topic).values_list('source', flat=True).distinct()
+
+        selected_data = DashboardData.objects.filter(topic=my_topic)
         
-        selected_data = DashboardData.objects.filter(topic=selected_topics[0])
+        
+        intensity_data = selected_data.filter(topic=my_topic).order_by('-intensity').first()
+        relevant_data = selected_data.filter(topic=my_topic).order_by('-relevance').first()
+        likelihood_data = selected_data.filter(topic=my_topic).order_by('-likelihood').first()
+
+        
         
         params = {
-        # 'catproducts' : all_prods,
-        'selected_data' : selected_data,
-        'unique_topics_list' : unique_topics_list,
+                # 'catproducts' : all_prods,
+                'selected_data' : selected_data,
+                'unique_topics_list' : unique_topics_list,
+                'sources': sources,
+                
+                'intensity_data' : intensity_data,
+                'relevant_data' : relevant_data,
+                'likelihood_data' : likelihood_data,
                 }
         return render(request, 'djid_app/index.html', params)
     
