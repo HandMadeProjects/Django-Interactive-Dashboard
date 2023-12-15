@@ -5,9 +5,9 @@
 pip install Django
 
 
-`git clone https://github.com/HandMadeProjects/Django-Interactive-Dashboard.git`
+```git clone https://github.com/HandMadeProjects/Django-Interactive-Dashboard.git
 
-`cd interactive_dashboard`
+cd interactive_dashboard```
 
 
 ### Start Development Server:
@@ -17,5 +17,7 @@ pip install Django
 
 ### Create Django Admin User:
 Route : /admin
+
+
 useraname : admin
 password : @123$djid_app
