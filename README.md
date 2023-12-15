@@ -5,12 +5,17 @@
 pip install Django
 
 
-### Create Django Admin User:
-python manage.py createsuperuser
+`git clone https://github.com/HandMadeProjects/Django-Interactive-Dashboard.git`
 
-useraname : admin
-password : @123$djid_app
+`cd interactive_dashboard`
 
 
 ### Start Development Server:
-python manage.py runserver
+`python manage.py runserver`
+
+
+
+### Create Django Admin User:
+Route : /admin
+useraname : admin
+password : @123$djid_app
