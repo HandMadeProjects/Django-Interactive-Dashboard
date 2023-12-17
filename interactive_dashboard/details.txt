@@ -1,3 +1,10 @@
+### Installs 
+pip install django
+
+
+
+
+
 ### Create a Django Project:
 django-admin startproject interactive_dashboard
 
